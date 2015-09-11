@@ -26,5 +26,4 @@ void strswap2(char *s1, char *s2) {
     }
     ii+=1;
   }
-
 }
