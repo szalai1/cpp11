@@ -16,9 +16,9 @@ Ratio operator+(Ratio r1, Ratio r2) {
                r1.den() * r2.den());
 }
 
-Ratio Ratio::operator+=(const Ratio &rv) {
-  *this = *this+rv;
-  return *this;
+Ratio operator+=(Ratio &lv, const Ratio &rv) {
+  lv = lv+rv;
+  return lv;
 }
 
 Ratio operator-(Ratio &r1, Ratio &r2) {
@@ -39,9 +39,9 @@ Ratio operator*( const Ratio &lv, const Ratio &rv) {
                lv.den() * rv.den());
 }
 
-Ratio Ratio::operator*=(const Ratio &rv) {
-  *this = (*this) * rv;
-  return *this;
+Ratio operator*=(Ratio &lv, const Ratio &rv) {
+  lv = lv * rv;
+  return lv;
 }
 
 Ratio operator/(const Ratio &lv, const Ratio &rv) {
