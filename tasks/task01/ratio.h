@@ -5,11 +5,9 @@ public:
   Ratio(int num, int den);
   int num() const { return num_; }
   int den() const { return den_; }
-
   operator double() {
     return this->num()/(double) this->den();
   }
-
 private:
   int num_;       /* numerator */
   int den_;       /* denominator */
