@@ -1,8 +1,8 @@
 # task02
 
-This code is not fully mine. The writter of this code is [Zoltan Czirkos](http://www.eet.bme.hu/~czirkos/) (BUTE).
+This code is not fully mine. The writer of this code is [Zoltan Czirkos](http://www.eet.bme.hu/~czirkos/) (BUTE).
 
-Mine part: 
+Own part: 
 * ```class Function```
 * ```class Cos```
 * ```class Sin```
