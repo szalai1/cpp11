@@ -227,7 +227,8 @@ public:
     delete exp_;
   }
   virtual Expression *derivative() const override {
-    return new Product{partial_derivative(), exp_->derivative()};
+    return new Product{partial_derivative(exp_->clone()),
+        exp_->derivative()};
   }
   virtual double evaluate(double x) const override {
     return partial_evaluate(exp_->evaluate(x));
@@ -240,7 +241,7 @@ public:
 private:
   virtual std::string get_name() const = 0;
   virtual double partial_evaluate(double) const = 0;
-  virtual Expression *partial_derivative() const = 0;
+  virtual Expression *partial_derivative(Expression *) const = 0;
 protected:
   Expression *exp_;
 };
@@ -252,7 +253,7 @@ class Cos final : public Function {
  private:
   virtual std::string get_name() const override;
   virtual double partial_evaluate(double  x) const override;
-  virtual Expression *partial_derivative()  const override;
+  virtual Expression *partial_derivative(Expression *)  const override;
 };
 
 class Sin final :public Function {
@@ -268,8 +269,8 @@ class Sin final :public Function {
   virtual double partial_evaluate(double  x) const override {
     return  sin(x);
   }
-  virtual Expression *partial_derivative()  const override {
-    return new Cos{exp_->clone()};
+  virtual Expression *partial_derivative(Expression *exp)  const override {
+    return new Cos{exp};
   }
 };
 
@@ -285,8 +286,8 @@ double Cos::partial_evaluate(double  x) const {
   return  cos(x);
 }
 
-Expression *Cos::partial_derivative()  const {
-  return new Sin{exp_->clone()};
+Expression *Cos::partial_derivative(Expression *exp)  const {
+  return new Sin{exp};
 }
 
 int main() {
