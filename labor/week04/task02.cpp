@@ -1,6 +1,6 @@
 #include <iostream>
 
-int operator ""_binary(char const *raw ) {
+constexpr int operator ""_binary(char const *raw ) {
   switch (raw[0]) {
   case '\0':
     return 0;
