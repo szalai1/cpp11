@@ -1,10 +1,6 @@
 #include <iostream>
 #include <cmath>
 
-double log_b(int base, double num) {
-  return log10(num)/log10(base);
-}
-
 struct BasePrinter {
   int base_;
   std::ostream &os_;
@@ -13,16 +9,13 @@ struct BasePrinter {
     convert(num);
     return os_;
   }
+
   void convert(int num) {
-    int max_digit = log_b(base_, num);
-    convert_helper(num, max_digit);
-  }
-  void convert_helper(int num, int digit) {
-    if (digit == -1) {
+    if ( num < base_) {
+      os_ << num;
       return;
     }
-    int max_val = pow( base_, digit);
-    int c = num/max_val;
+    char c = num%base_;
     char cc;
     if (c >=10 ) {
       cc = 'A' + c - 10;
@@ -30,8 +23,8 @@ struct BasePrinter {
     else {
       cc = '0' + c;
     }
+    convert(num/base_);
     os_ << cc;
-    convert_helper(num%max_val, digit-1);
   }
 };
 
@@ -46,4 +39,5 @@ BasePrinter operator<<(std::ostream &os, base b) {
 
 int main(int argc, char **argv) {
   std::cout << base(2) << 32321 << std::endl;
+  std::cout << base(16) << 32321 << std::endl;
 }
