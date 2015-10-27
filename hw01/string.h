@@ -6,6 +6,8 @@
 #include <map>
 #include <string>
 
+class CharRep;
+
 class StringValue {
  private:
   char* string;
@@ -16,7 +18,7 @@ class StringValue {
    * Megadja a tarolt string hosszat.
    * @return A tarolt string hossza;
    */
-  int get_len() { return strlen(string); }
+  int get_len() { std::cout << "len\n";return strlen(string); }
   /** 
    * Visszater a tarolt string pointrevel;
    * @return A tarolt stringre mutato pointer;
@@ -95,7 +97,7 @@ class MyString {
    * Megadja a string hosszat.
    * @return a tarolt string hossza.
    */
-  size_t size() const { return string_ == nullptr? 0 : string_->get_len();}
+  size_t size() const { std::cout << "x\n";return string_ == nullptr? 0 : string_->get_len();}
   /**
    * operator+= a sima operator+-t hasznalja
    * @param a hozza adando MyString
@@ -118,7 +120,15 @@ class MyString {
    * @param hanyadik karakter
    * @return referncia az adott karakterre
    */
-  char& operator[](size_t);
+  CharRep operator[](size_t);
+  /**
+   * Megvaltoztat egy karakter az s-helyen.
+   * Arra van hogy a CharRep hivja, ha valtoztatni akar
+   * @param hanyadik karakter
+   * @param mire valtoztassa
+   * @return void
+   */
+  void change_letter(size_t, char);
   /**
    * Destruktor: szol a tarolt StringValuenak, hogy neki mar
    * nincs ra szuksege.
@@ -149,12 +159,20 @@ std::ostream& operator<<(std::ostream& os, MyString const &s);
 
 class CharRep {
  private:
+  MyString *mystr_;
   char *what_;
+  size_t pos_;
  public:
- CharRep(char *w):what_(w) {}
-  operator=(char c);
-  operator char() const {return *what;}
-  
+  CharRep() = delete;
+  explicit CharRep(char *w, size_t pos, MyString *mystr):
+  what_{w},mystr_{mystr}, pos_{pos} { std::cout << "charrep\n";}
+  char operator=(char c) {
+    mystr_->change_letter(pos_, c);
+    return c; 
+  }
+  operator char() const {
+    return *what_;
+  }
 };
 
 #endif

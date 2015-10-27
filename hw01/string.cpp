@@ -19,17 +19,21 @@ StringValue::~StringValue() {
 }
 
 MyString::MyString(char const *str) {
+  std::cout << "construktor "  << str << std::endl;
   auto it = catalog_.find(str);
   if ( it == catalog_.end()) {
-    char * s = new char[strlen(str) +1];
+    std::cout << "nincs benne\n";
+    char *s = new char[strlen(str) +1];
     strcpy(s, str);
     string_ = new StringValue{s};
     catalog_[str] = string_;
   }
   else {
+    std::cout << "van benne\n";
     string_ = it->second;
   }
   string_->refer();
+  
 }
 
 MyString::MyString( MyString const &rvl) {
@@ -100,28 +104,33 @@ MyString& MyString::operator=(MyString &&rvl) {
   return *this;
 }
 
-char& MyString::operator[](size_t s) {
-  if (s > size() ) {
-    throw "operator[]";
+void MyString::change_letter(size_t s, char c) {
+  std::cout << "change\n";
+  if ( string_->get_str()[s] == c) {
+    return;
   }
-  if (string_->get_ref() == 1 ) {
-    return *(string_->get_str()+s);
+  StringValue* tmp = string_;
+  char *str_tmp = new char[size()+1];
+  strcpy(str_tmp, tmp->get_str());
+  str_tmp[s] = c;
+  if (catalog_.find(str_tmp) == catalog_.end()) {
+    string_ = new StringValue{str_tmp};
   }
   else {
-    StringValue* tmp = string_;
-    char *str_tmp = new char[size()+1];
-    strcpy(str_tmp, tmp->get_str());
-    if (catalog_.find(str_tmp) == catalog_.end()) {
-      string_ = new StringValue{str_tmp};
-    }
-    else {
-      string_ = catalog_.find(str_tmp)->second;
-      delete str_tmp;
-      
-    }
-    tmp->deref();
-    return *(string_->get_str()+s);
+    deref();
+    string_ = catalog_.find(str_tmp)->second;
+    string_->refer();
+    delete str_tmp;
   }
+}
+
+CharRep MyString::operator[](size_t s) {
+  std::cout << "op[] " << s <<  " "<< string_->get_str() << std::endl;
+  if (s > size() ) {
+    throw "change_letter";
+  }
+  std::cout << "op[]2 " << s << std::endl;
+  return CharRep{string_->get_str()+s,s, this};
 }
 
 MyString operator+(MyString const &lvl, MyString const &rvl) {

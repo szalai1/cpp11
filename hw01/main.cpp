@@ -8,13 +8,13 @@ void g(std::string x) {
   }
 }
 int main() {
-  test1();
-  g(">>>");
-  std::cout << "\n #########" << std::endl;
-  test2();
-  g(">>>");
+  //  test1();
+  //g(">>>");
+  //std::cout << "\n #########" << std::endl;
+  //test2();
+  //g(">>>");
   std::cout<< "\n #########" << std::endl;
-  //test3();
+  test3();
   g(">>>");
   std::cout<< "\n #########" << std::endl;
   test4();
