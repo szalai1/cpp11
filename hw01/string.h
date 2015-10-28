@@ -18,7 +18,7 @@ class StringValue {
    * Megadja a tarolt string hosszat.
    * @return A tarolt string hossza;
    */
-  int get_len() { std::cout << "len\n";return strlen(string); }
+  int get_len() { return strlen(string); }
   /** 
    * Visszater a tarolt string pointrevel;
    * @return A tarolt stringre mutato pointer;
@@ -97,7 +97,9 @@ class MyString {
    * Megadja a string hosszat.
    * @return a tarolt string hossza.
    */
-  size_t size() const { std::cout << "x\n";return string_ == nullptr? 0 : string_->get_len();}
+  size_t size() const {
+    return string_ == nullptr? 0 : string_->get_len();
+  }
   /**
    * operator+= a sima operator+-t hasznalja
    * @param a hozza adando MyString
@@ -133,7 +135,7 @@ class MyString {
    * Destruktor: szol a tarolt StringValuenak, hogy neki mar
    * nincs ra szuksege.
    */
-  ~MyString(){ deref(); };
+  ~MyString(){deref(); };
 };
 /**
  * Hozzafuz egy karter egy MyStrinhez
@@ -163,13 +165,30 @@ class CharRep {
   char *what_;
   size_t pos_;
  public:
+  /**
+   * Default construktor letiltva
+   */
   CharRep() = delete;
+  /**
+   * Konstruktor csak a char reprezentalasra  
+   * @param w a reprezentalt karakterre pointer
+   * @param pos az adott StringValue-ben levo helye
+   * @param mystr szetvalasztas eseten melyik stringet kell
+   */
   explicit CharRep(char *w, size_t pos, MyString *mystr):
-  what_{w},mystr_{mystr}, pos_{pos} { std::cout << "charrep\n";}
+  mystr_{mystr},what_{w}, pos_{pos} {}
+  /**
+   * Ertekadas, innen tudom, hogy szet kell valasztani az eredeti stringet
+   * @param c mi legyen az erteke
+   * @return c
+   */
   char operator=(char c) {
     mystr_->change_letter(pos_, c);
     return c; 
   }
+  /**
+   * char cast, hogy lehessen karakterkent hasznalni
+   */
   operator char() const {
     return *what_;
   }
