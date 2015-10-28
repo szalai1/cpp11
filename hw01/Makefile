@@ -12,3 +12,6 @@ main.o: main.cpp
 
 test.o: test.cpp test.h
 	$(CC)  $(FLAGS) -c $< -o $@	
+
+clean:
+	rm *.o main
