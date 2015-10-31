@@ -15,8 +15,8 @@ void test1() {
 void test2() {
   MyString s1{"alma"};
   MyString s2{"fa"};
-  s1 += s2;
-  std::cout << "almafa ?= " << s1 << std::endl;
+  MyString s3 = s1 + s2;
+  std::cout << "almafa ?= " << s3 << std::endl;
 }
 
 void test3() {

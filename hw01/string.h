@@ -8,37 +8,10 @@
 
 class CharRep;
 
-class StringValue {
- private:
+struct StringValue {
   char* string;
   int ref;
- public:
   ~StringValue();
-  /**
-   * Megadja a tarolt string hosszat.
-   * @return A tarolt string hossza;
-   */
-  int get_len() { return strlen(string); }
-  /** 
-   * Visszater a tarolt string pointrevel;
-   * @return A tarolt stringre mutato pointer;
-   */
-  char  *get_str() {return string;}
-  /**
-   * Getter a referenciak szamlalojara;
-   * @return  referencia szamlalo aktualis erteke.
-   */
-  int get_ref() { return ref; }
-  /**
-   * Noveli a referencia szamlalot;
-   *
-   */
-  void refer();
-  /**
-   * Csokkenti a referencia szamlalo erteket, ha eleri a 0-t 
-   * meghivja a destruktort.
-   */
-  void deref();
   /**
    * Konstruktor
    * Eltarolja a kapott char*-ot, memoria foglalassal es masolassal
@@ -52,8 +25,8 @@ class StringValue {
 class MyString {
  private:
   StringValue *string_;
-  void deref();
-  void ref(StringValue*);
+  void detach();
+  void attach(StringValue*);
  public:
   static std::map<std::string, StringValue*> catalog_;
   /**
@@ -98,7 +71,7 @@ class MyString {
    * @return a tarolt string hossza.
    */
   size_t size() const {
-    return string_ == nullptr? 0 : string_->get_len();
+    return string_ == nullptr? 0 : strlen(string_->string);
   }
   /**
    * operator+= a sima operator+-t hasznalja
@@ -135,7 +108,7 @@ class MyString {
    * Destruktor: szol a tarolt StringValuenak, hogy neki mar
    * nincs ra szuksege.
    */
-  ~MyString(){deref(); };
+  ~MyString(){ detach(); };
 };
 /**
  * Hozzafuz egy karter egy MyStrinhez
