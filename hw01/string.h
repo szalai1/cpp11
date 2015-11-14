@@ -6,37 +6,12 @@
 #include <map>
 #include <string>
 
-class StringValue {
- private:
+class CharRep;
+
+struct StringValue {
   char* string;
   int ref;
- public:
   ~StringValue();
-  /**
-   * Megadja a tarolt string hosszat.
-   * @return A tarolt string hossza;
-   */
-  int get_len() { return strlen(string); }
-  /** 
-   * Visszater a tarolt string pointrevel;
-   * @return A tarolt stringre mutato pointer;
-   */
-  char  *get_str() {return string;}
-  /**
-   * Getter a referenciak szamlalojara;
-   * @return  referencia szamlalo aktualis erteke.
-   */
-  int get_ref() { return ref; }
-  /**
-   * Noveli a referencia szamlalot;
-   *
-   */
-  void refer();
-  /**
-   * Csokkenti a referencia szamlalo erteket, ha eleri a 0-t 
-   * meghivja a destruktort.
-   */
-  void deref();
   /**
    * Konstruktor
    * Eltarolja a kapott char*-ot, memoria foglalassal es masolassal
@@ -50,8 +25,8 @@ class StringValue {
 class MyString {
  private:
   StringValue *string_;
-  void deref();
-  void ref(StringValue*);
+  void detach();
+  void attach(StringValue*);
  public:
   static std::map<std::string, StringValue*> catalog_;
   /**
@@ -95,7 +70,9 @@ class MyString {
    * Megadja a string hosszat.
    * @return a tarolt string hossza.
    */
-  size_t size() const { return string_ == nullptr? 0 : string_->get_len();}
+  size_t size() const {
+    return string_ == nullptr? 0 : strlen(string_->string);
+  }
   /**
    * operator+= a sima operator+-t hasznalja
    * @param a hozza adando MyString
@@ -118,12 +95,20 @@ class MyString {
    * @param hanyadik karakter
    * @return referncia az adott karakterre
    */
-  char& operator[](size_t);
+  CharRep operator[](size_t);
+  /**
+   * Megvaltoztat egy karakter az s-helyen.
+   * Arra van hogy a CharRep hivja, ha valtoztatni akar
+   * @param hanyadik karakter
+   * @param mire valtoztassa
+   * @return void
+   */
+  void change_letter(size_t, char);
   /**
    * Destruktor: szol a tarolt StringValuenak, hogy neki mar
    * nincs ra szuksege.
    */
-  ~MyString(){ deref(); };
+  ~MyString(){ detach(); };
 };
 /**
  * Hozzafuz egy karter egy MyStrinhez
@@ -149,12 +134,37 @@ std::ostream& operator<<(std::ostream& os, MyString const &s);
 
 class CharRep {
  private:
+  MyString *mystr_;
   char *what_;
+  size_t pos_;
  public:
- CharRep(char *w):what_(w) {}
-  operator=(char c);
-  operator char() const {return *what;}
-  
+  /**
+   * Default construktor letiltva
+   */
+  CharRep() = delete;
+  /**
+   * Konstruktor csak a char reprezentalasra  
+   * @param w a reprezentalt karakterre pointer
+   * @param pos az adott StringValue-ben levo helye
+   * @param mystr szetvalasztas eseten melyik stringet kell
+   */
+  explicit CharRep(char *w, size_t pos, MyString *mystr):
+  mystr_{mystr},what_{w}, pos_{pos} {}
+  /**
+   * Ertekadas, innen tudom, hogy szet kell valasztani az eredeti stringet
+   * @param c mi legyen az erteke
+   * @return c
+   */
+  char operator=(char c) {
+    mystr_->change_letter(pos_, c);
+    return c; 
+  }
+  /**
+   * char cast, hogy lehessen karakterkent hasznalni
+   */
+  operator char() const {
+    return *what_;
+  }
 };
 
 #endif
