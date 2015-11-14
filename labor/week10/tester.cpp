@@ -159,7 +159,6 @@ void task2_3() {
 
 void task2_4(int n) {
   Tester<int> t;
-  //  auto queens =  std::vector<auto>{{t.add_variable(0,1,2,3,4,5,6,7)}};
   std::vector<std::function<int()>> queens;
   std::vector<int> nums;
   for (int ii = 0; ii < n; ++ii) {
@@ -169,16 +168,17 @@ void task2_4(int n) {
       queens.push_back(t.add_variable(nums));
   }
   for (int ii = 0; ii < n; ++ii) {
-    for (int jj = ii; jj < n; ++jj) {
+    for (int jj = ii+1; jj < n; ++jj) {
       t.add_constraint([=]() { return queens[ii]() != queens[jj]();});
-      t.add_constraint([=]() { return queens[ii]()-queens[jj]() != ii-jj ;});
+      t.add_constraint([=]() { return abs(queens[ii]()-queens[jj]()) != jj - ii ;});
     }
   }
   auto print = [=]() {
-    std::for_each(queens.begin(),
-                  queens.end(),
-                  [=](std::function<int()> f) {std::cout  << f() << " ";});
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < n; ++j)
+        std::cout << (queens[i]() ==j ? 'x':'.');
     std::cout << std::endl;
+  }
   };
   t.solve(print);
 }
@@ -187,5 +187,5 @@ void task2_4(int n) {
 int main() {
   //  task2_1();
   //  task2_3();
-  task2_4(4);
+  task2_4(8);
 }
