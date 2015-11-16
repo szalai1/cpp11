@@ -165,6 +165,10 @@ class CharRep {
   operator char() const {
     return *what_;
   }
+  char operator=(CharRep const &r) {
+    operator=(*r.what_);
+    return *r.what_;
+  }
 };
 
 #endif
