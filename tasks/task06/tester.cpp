@@ -88,6 +88,11 @@ public:
       end = carry;
     }
   }
+  ~NewTester() {
+    for (auto i: variables_) {
+      delete i;
+    }
+  }
 };
 
 int main() {
