@@ -65,7 +65,6 @@ MyString& MyString::operator=(MyString  const &rvl) {
 }
 
 MyString&  MyString::operator=(char const *str) {
-  std::cout << str << std::endl;
   auto it = catalog_.find(str);
   if ( it == catalog_.end()) {
     detach();
@@ -114,7 +113,6 @@ CharRep MyString::operator[](size_t s) {
 }
 
 MyString operator+(MyString const &lvl, MyString const &rvl) {
-  std::cout << lvl << "+" << rvl << std::endl;
   size_t len  = lvl.size() + rvl.size();
   char *s = new char[len+1];
   if ( lvl.size() != 0 ) {
@@ -123,7 +121,6 @@ MyString operator+(MyString const &lvl, MyString const &rvl) {
   if ( rvl.size() != 0 ) {
     strcpy(s+lvl.size(), rvl.get_str());
   }
-  std::cout << s << std::endl;
   MyString sum{s};
   delete[] s;
   return sum;
